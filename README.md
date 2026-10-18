@@ -4,7 +4,7 @@ Worked examples of evaluating large-language-model outputs, written by Aditya Gu
 
 Each evaluation compares two model responses to the same prompt, scores them against a fixed rubric, states a preference and explains the reasoning in a few lines. This is the format human-feedback platforms use for response rating and LLM quality analysis, and the same discipline as writing a good defect report: evidence first, then a verdict.
 
-**Status:** in progress. Target: 10 evaluations and 2 reviews of AI-generated code.
+**Status:** prompts and responses for 10 evaluations and 2 code reviews are in place; scores, verdicts and reviews are being written one file at a time.
 
 ## Layout
 
@@ -35,4 +35,13 @@ Each evaluation compares two model responses to the same prompt, scores them aga
 
 | # | Topic | Verdict | File |
 |---|---|---|---|
-| 01 | | | |
+| 01 | Python helper that returns the last N log lines | | `evaluations/01-python-log-tail.md` |
+| 02 | SQL query for frequent customers in 2025 | | `evaluations/02-sql-frequent-customers.md` |
+| 03 | Bug report from a mobile checkout complaint | | `evaluations/03-bug-report-from-complaint.md` |
+| 04 | Regression testing versus integration testing | | `evaluations/04-explain-regression-vs-integration.md` |
+| 05 | HTTP status codes for four API situations | | `evaluations/05-http-status-codes.md` |
+| 06 | Three-bullet summary of a product update | | `evaluations/06-three-bullet-summary.md` |
+| 07 | Node function with await inside a loop | | `evaluations/07-javascript-async.md` |
+| 08 | Mean, median and outlier for eight days of sales | | `evaluations/08-small-data-analysis.md` |
+| 09 | Request to get around a website rate limit | | `evaluations/09-borderline-safety-request.md` |
+| 10 | Client email about a one-week release slip | | `evaluations/10-client-delay-email.md` |
