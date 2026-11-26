@@ -4,7 +4,7 @@ Worked examples of evaluating large-language-model outputs, written by Aditya Gu
 
 Each evaluation compares two model responses to the same prompt, scores them against a fixed rubric, states a preference and explains the reasoning in a few lines. This is the format human-feedback platforms use for response rating and LLM quality analysis, and the same discipline as writing a good defect report: evidence first, then a verdict.
 
-**Status:** 10 evaluations and 2 code reviews complete.
+**Status:** 10 paired evaluations, 2 code reviews (Python, JavaScript) and 4 sanitizer-reproduced C++ audits complete.
 
 ## Layout
 
@@ -13,6 +13,7 @@ Each evaluation compares two model responses to the same prompt, scores them aga
 | `rubric.md` | The criteria and 1 to 5 scale used in every evaluation |
 | `evaluations/` | One Markdown file per evaluation, numbered `01-`, `02-`, ... (start from `evaluations/TEMPLATE.md`) |
 | `code-reviews/` | Written reviews of AI-generated code (start from `code-reviews/TEMPLATE.md`) |
+| `cpp-audits/` | AI-generated C++ audited for out-of-bounds access, leaks, data races and undefined behavior, each bug reproduced under ASan, UBSan or TSan (see `cpp-audits/README.md`) |
 
 ## How each evaluation is written
 
@@ -52,3 +53,14 @@ Each evaluation compares two model responses to the same prompt, scores them aga
 |---|---|---|---|
 | 01 | Deduplicating a contact list in Python | Reject | `code-reviews/cr-01-python-dedupe-contacts.md` |
 | 02 | Parsing duration strings in JavaScript | Reject | `code-reviews/cr-02-js-parse-duration.md` |
+
+## C++ audits
+
+Each bug is reproduced under a sanitizer, and CI re-runs every reproduction and fix with GCC and Clang (`sh cpp-audits/run.sh`).
+
+| # | Bug class | Sanitizer | Verdict | Folder |
+|---|---|---|---|---|
+| 01 | Out-of-bounds write in a prefix-sum array | ASan | Reject | `cpp-audits/01-prefix-sum-out-of-bounds/` |
+| 02 | Memory leak on the error path of a parser | ASan / LeakSanitizer | Reject | `cpp-audits/02-parse-numbers-leak/` |
+| 03 | Data race in a multithreaded sum | TSan | Reject | `cpp-audits/03-parallel-sum-data-race/` |
+| 04 | Signed-overflow UB in a binary-search midpoint | UBSan | Reject | `cpp-audits/04-binary-search-overflow/` |
