@@ -1,0 +1,37 @@
+name: C++ audits
+
+# Re-runs every C++ audit: each buggy.cpp must trigger its sanitizer and each
+# fixed.cpp must run clean, with both GCC and Clang.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    name: ${{ matrix.cxx }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++ clang libclang-rt-18-dev
+      # TSan in GCC 13 / Clang 18 needs lower mmap ASLR entropy on recent kernels.
+      - name: Lower ASLR entropy for ThreadSanitizer
+        run: sudo sysctl vm.mmap_rnd_bits=28
+      - name: Reproduce bugs and verify fixes
+        run: sh cpp-audits/run.sh ${{ matrix.cxx }}
+      - name: Upload sanitizer logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sanitizer-logs-${{ matrix.cxx }}
+          path: /tmp/cpp-audits/*.log
